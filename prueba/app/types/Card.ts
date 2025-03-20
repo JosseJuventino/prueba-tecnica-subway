@@ -1,3 +1,6 @@
 export interface CardProps {
-    nombre: string
+    id: number
+    title: string
+    finded: boolean
+    showCard: boolean
 }
