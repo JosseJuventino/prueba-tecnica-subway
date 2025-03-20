@@ -28,7 +28,7 @@ export function GameBoard() {
         </button>
 
         </div>
-        {isGameOver && <p className='bg-white text-center text-2xl'>Congratulations! You won the game!</p>}
+        {isGameOver && <p className='bg-white text-center text-2xl'>Felicidades haz ganado el juego</p>}
       </div>
     </div>
   );
