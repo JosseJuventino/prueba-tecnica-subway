@@ -1,31 +1,86 @@
-import { create } from 'zustand'
-import { CardProps } from '../types/Card'
+// src/store/MemoryGameStore.ts
+import { create } from 'zustand';
+import { v4 as uuidv4 } from 'uuid';
 
-interface CardStore {
-    cards: CardProps[]
-    addCard: (card: CardProps) => void
+interface Card {
+  id: number;
+  title: string;
+  uuid: string;
+  finded: boolean;
+  showCard: boolean;
 }
 
-const defaultCards: CardProps[] = [
-    { id: 1, title: 'Card 1', finded: false, showCard: false},
-    { id: 2, title: 'Card 2', finded: false, showCard: false},
-]
+interface GameStore {
+  cards: Card[];
+  flippedCards: Card[];
+  moves: number;
+  resetGame: () => void;
+  flipCard: (cardId: string) => void;
+}
 
-export const useCardStore = create<CardStore>((set) => ({
-    cards: defaultCards,
-    addCard: (card) => set((state) => ({ cards: [...state.cards, card] })),
-}))
+const defaultCards: Card[] = [
+  { id: 1, title: 'Card 1', uuid: '', finded: false, showCard: false },
+  { id: 2, title: 'Card 2', uuid: '', finded: false, showCard: false },
+  { id: 3, title: 'Card 3', uuid: '', finded: false, showCard: false },
+  { id: 4, title: 'Card 4', uuid: '', finded: false, showCard: false },
+];
 
-export const addFindedCard = (id: number) => {
-    useCardStore.setState((state) => {
-        const cardIndex = state.cards.findIndex((card) => card.id === id);
-        const updatedCards = [...state.cards];
-        if (cardIndex !== -1) {
-            updatedCards[cardIndex] = { ...updatedCards[cardIndex], finded: true };
+const doubleCards = [...defaultCards, ...defaultCards]; // Create pairs of cards
+
+const randomCards = (cards: Card[]) => cards.sort(() => Math.random() - 0.5);
+
+export const useMemoryGameStore = create<GameStore>((set) => ({
+  cards: randomCards(doubleCards).map(card => ({
+    ...card,
+    uuid: uuidv4(),
+  })),
+
+  flippedCards: [],
+
+  moves: 0,
+
+  resetGame: () => set({
+    cards: randomCards(doubleCards).map(card => ({
+      ...card,
+      uuid: uuidv4(),
+      finded: false,
+      showCard: false,
+    })),
+    flippedCards: [],
+    moves: 0,
+  }),
+
+  flipCard: (cardId: string) => {
+    set((state) => {
+      const { cards, flippedCards, moves } = state;
+      const cardIndex = cards.findIndex(card => card.uuid === cardId);
+      const flippedCard = cards[cardIndex];
+
+      if (flippedCard.finded || flippedCards.length === 2) return state;
+
+      const newFlippedCards = [...flippedCards, flippedCard];
+
+      if (newFlippedCards.length === 2) {
+
+        if (newFlippedCards[0].id === newFlippedCards[1].id) {
+          const updatedCards = cards.map(card =>
+            card.title === newFlippedCards[0].title
+              ? { ...card, finded: true }
+              : card
+          );
+
+          set({ cards: updatedCards });
         }
-        return { cards: updatedCards };
+
+        setTimeout(() => {
+          set({ flippedCards: [] });
+        }, 1000);
+      }
+
+      return {
+        flippedCards: newFlippedCards,
+        moves: moves + 1,
+      };
     });
-}
-
-
-
+  },
+}));
