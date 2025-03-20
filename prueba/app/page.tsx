@@ -1,21 +1,14 @@
-"use client"
-import { Card } from "./components/Card";
-import { useCardStore } from "./store/CardStore";
-import { randomizeCards } from "./utils/RandomizeCard";
+// src/App.tsx
+import React from 'react';
+import { GameBoard } from './components/CardsGameContainer';
 
-export default function Home() {
-
-  const cards = useCardStore((state) => state.cards)
-
-  const doubleCards = cards.concat(cards)
-
-  const randomized = randomizeCards(doubleCards)
-  
+export default function App() {
   return (
-    <div className="grid grid-cols-3 w-full gap-2">
-      {randomized.map((card) => (
-        <Card key={card.id} title={card.title} id={card.id} finded={card.finded} />
-      ))}
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1 className="text-3xl font-bold text-center py-4">Juego de memoria</h1>
+      <div className="w-full flex justify-center">
+      <GameBoard />
+      </div>
     </div>
   );
 }

@@ -1,11 +1,21 @@
-import { CardProps } from "../types/Card";
+import React from 'react';
+import { useMemoryGameStore } from '../store/CardStore';
+import { CardProps } from '../types/Card';
 
-export function Card({ title, id, finded, showCard } : CardProps) {
-  
-
-    return(
-      <div key={id} className="flex flex-col justify-center items-center rounded-md bg-amber-200 h-52 border-2 hover:scale-105 transition-all cursor-pointer hover:border-gray-300 border-transparent">
-        <h1 className="text-2xl font-bold">{title}</h1>
+export function Card({ title, finded, uuid }: CardProps) {
+  const flipCard = useMemoryGameStore((state) => state.flipCard);
+  const flippedCards = useMemoryGameStore((state) => state.flippedCards);
+  const isFlipped = flippedCards.some((card) => card.uuid === uuid) || finded;
+  return (
+    <div className="flex justify-center items-center">
+      <div
+        className={`bg-gray-200 h-32 w-32 flex justify-center items-center cursor-pointer ${
+          isFlipped ? 'bg-green-300' : 'bg-gray-300'
+        }`}
+        onClick={() => flipCard(uuid  || '')}
+      >
+        {isFlipped ? <p>{title}</p> : <p>?</p>}
       </div>
-    );
+    </div>
+  );
 }
