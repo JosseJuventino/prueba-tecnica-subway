@@ -17,18 +17,18 @@ export function GameBoard() {
         ))}
       </div>
       <div className="mt-4 flex flex-col justify-center">
-        <p className='text-center'>Moves: <span className='font-bold text-green-500'>{moves}</span></p>
+        <p className='text-center'>Movimientos: <span className='font-bold text-green-500'>{moves}</span></p>
         
         <div className='flex flex-row justify-center'>
         <button
           onClick={resetGame}
           className="mt-4 font-bold bg-green-400 px-4 py-2 rounded cursor-pointer text-white"
         >
-          Restart Game
+          Reiniciar juego
         </button>
 
         </div>
-        {isGameOver && <p className='bg-white text-center text-2xl'>Congratulations! You won the game!</p>}
+        {isGameOver && <p className='bg-white text-center text-2xl'>Felicidades haz ganado el juego</p>}
       </div>
     </div>
   );
