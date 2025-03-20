@@ -21,6 +21,8 @@ interface GameStore {
 const defaultCards: Card[] = [
   { id: 1, title: 'Card 1', uuid: '', finded: false, showCard: false },
   { id: 2, title: 'Card 2', uuid: '', finded: false, showCard: false },
+  { id: 3, title: 'Card 3', uuid: '', finded: false, showCard: false },
+  { id: 4, title: 'Card 4', uuid: '', finded: false, showCard: false },
 ];
 
 const doubleCards = [...defaultCards, ...defaultCards]; // Create pairs of cards
@@ -66,7 +68,7 @@ export const useMemoryGameStore = create<GameStore>((set) => ({
               ? { ...card, finded: true }
               : card
           );
-          
+
           set({ cards: updatedCards });
         }
 
